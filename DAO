@@ -1,0 +1,78 @@
+package spro.dao;
+
+import java.util.List;
+
+public interface DatabaseCreator {
+	
+	/**
+	 * @author 尚振
+	 * @param databasename 数据库名字
+	 * @param user数据库名字
+	 * @param password数据库密码
+	 * @param port 端口号
+	 * @param characterEncoding 编码类型
+	 * @return
+	 */
+	public String createdatabase(String user,String password,String port, String characterEncoding,String databasename);
+	
+	/**
+	 * @author 尚振
+	 * @param user数据库名字
+	 * @param password数据库密码
+	 * @param port端口号
+	 * @param characterEncoding编码类型
+	 * @param tablename表名字
+	 * @param field字段类型
+	 * @return
+	 */
+	public String createtable(String user,String password,String port,String characterEncoding,String databasename,String tablename,String field);
+
+	/**
+	 * @author 尚振
+	 * @param user数据库名字
+	 * @param password数据库密码
+	 * @param port端口号
+	 * @param characterEncoding编码类型
+	 * @param databasename数据库名字
+	 * @param dropdatabasename要删除的数据库名字
+	 * @return
+	 */
+	public String dropdatabase(String user,String password,String port,String characterEncoding,String databasename,String dropdatabasename);
+		
+	/**
+	 * 
+	 * @author 尚振
+	 * @param user数据库名字
+	 * @param password数据库密码
+	 * @param port端口号
+	 * @param characterEncoding编码类型
+	 * @param databasename数据库名字
+	 * @param droptablename要删除的表的名字
+	 * @return
+	 */
+	public String droptable(String user,String password,String port,String characterEncoding,String databasename,String droptablename);
+
+	/**
+	 * 
+	 * @author 尚振
+	 * @param user数据库名字
+	 * @param password数据库密码
+	 * @param port端口号
+	 * @param characterEncoding编码类型
+	 * @param databasename数据库名字
+	 * @return
+	 */
+	public List<String> showalldatabase(String user,String password,String port,String characterEncoding,String databasename);
+	
+	/**
+	 * @author 尚振
+	 * @param user数据库名字
+	 * @param password数据库密码
+	 * @param port端口号
+	 * @param characterEncoding编码类型
+	 * @param databasename数据库名字
+	 * @return
+	 */
+	public List<String> showtablesindatabase(String user,String password,String port,String characterEncoding,String databasename);
+
+}
