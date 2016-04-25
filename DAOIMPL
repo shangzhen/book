@@ -1,0 +1,281 @@
+package spro.dao.impl;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.dbutils.QueryRunner;
+
+import com.opensymphony.xwork2.Result;
+
+import spro.dao.DatabaseCreator;
+import spro.factory.DaoFactory;
+
+public class DatabaseCreatorMysql implements DatabaseCreator {
+
+	private QueryRunner queryRunner;
+
+	public DatabaseCreatorMysql(QueryRunner queryRunner) {
+		super();
+		this.queryRunner = queryRunner;
+	}
+
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		List<String> list = new ArrayList<String>();
+
+		String user = "root";
+		String password = "123";
+		String port = "3306";
+		String characterEncoding = "utf-8";
+		String databasename = "ceshi";
+		String tablename = "test";
+		String field = "(id int, name varchar(80))";
+		String dropdatabasename = "ceshi";
+		String droptablename = "test";
+
+		// 创建数据库
+		// String s =
+		// DaoFactory.createDatabaseCreator().createdatabase(user,password,port,
+		// characterEncoding, databasename);
+		// System.out.println(s);
+
+		// 创建表
+		// String str = DaoFactory.createDatabaseCreator().createtable(user,
+		// password, port, characterEncoding,databasename,tablename,field);
+		// System.out.println(str);
+
+		// 删除数据库
+		// String str1 = DaoFactory.createDatabaseCreator().dropdatabase(user,
+		// password, port, characterEncoding, databasename, dropdatabasename);
+		// System.out.println(str1);
+
+		// 删除表
+		// String str2 = DaoFactory.createDatabaseCreator().droptable(user,
+		// password, port, characterEncoding, dropdatabasename, droptablename);
+		// System.out.println(str2);
+
+		/*
+		 * list = DaoFactory.createDatabaseCreator().showalldatabase(user,
+		 * password, port, characterEncoding,databasename);
+		 * System.out.println("数据库："); for(int i=0;i<list.size();i++){
+		 * System.out.println(list.get(i)); }
+		 */
+		/*list = DaoFactory.createDatabaseCreator().showtablesindatabase(user, password, port, characterEncoding,
+				databasename);
+		System.out.println("表：");
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+		}*/
+	}
+
+	@Override
+	public String createdatabase(String user, String password, String port, String characterEncoding,
+			String databasename) {
+		// TODO Auto-generated method stub
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// 一开始必须填一个已经存在的数据库
+
+		String url = "jdbc:mysql://localhost:" + port + "/test?useUnicode=true&characterEncoding=" + characterEncoding;
+		// System.out.println(url);
+		Connection conn = null;
+		Statement stat = null;
+		try {
+
+			conn = DriverManager.getConnection(url, user, password);
+			stat = conn.createStatement();
+			stat.executeUpdate("create database " + databasename);
+			Close(stat, conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return databasename + "数据库创建成功";
+	}
+
+	@Override
+	public String createtable(String user, String password, String port, String characterEncoding, String databasename,
+			String tablename, String field) {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		Statement stat = null;
+		String url = "jdbc:mysql://localhost:" + port + "/" + databasename + "?useUnicode=true&characterEncoding="
+				+ characterEncoding;
+
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+
+			stat = conn.createStatement();
+
+			// 创建表test
+
+			stat.executeUpdate("create table " + tablename + field);
+
+			Close(stat, conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return tablename + "创建成功";
+	}
+
+	// 关闭链接
+	public void Close(Statement stat, Connection conn, ResultSet result) {
+		if (result != null) {
+			try {
+				result.close();
+				stat.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	// 关闭链接
+	public void Close(Statement stat, Connection conn) {
+		if (stat != null) {
+			try {
+				stat.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public String dropdatabase(String user, String password, String port, String characterEncoding, String databasename,
+			String dropdatabasename) {
+		// TODO Auto-generated method stub
+
+		Connection conn = null;
+		Statement stat = null;
+		String url = "jdbc:mysql://localhost:" + port + "/" + databasename + "?useUnicode=true&characterEncoding="
+				+ characterEncoding;
+
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+
+			stat = conn.createStatement();
+
+			// 删除表test
+			String sql = "DROP DATABASE " + dropdatabasename;
+			stat.executeUpdate(sql);
+
+			Close(stat, conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return dropdatabasename + "数据库删除成功";
+	}
+
+	@Override
+	public String droptable(String user, String password, String port, String characterEncoding, String databasename,
+			String droptablename) {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		Statement stat = null;
+		String url = "jdbc:mysql://localhost:" + port + "/" + databasename + "?useUnicode=true&characterEncoding="
+				+ characterEncoding;
+
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+
+			stat = conn.createStatement();
+
+			// 删除表test
+			String sql = "DROP TABLE " + droptablename;
+			stat.executeUpdate(sql);
+
+			Close(stat, conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return droptablename + "表删除成功";
+	}
+
+	@Override
+	public List<String> showalldatabase(String user, String password, String port, String characterEncoding,
+			String databasename) {
+		Connection conn = null;
+		Statement stat = null;
+		List<String> list = new ArrayList<String>();
+		String url = "jdbc:mysql://localhost:" + port + "/" + databasename + "?useUnicode=true&characterEncoding="
+				+ characterEncoding;
+
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+
+			stat = conn.createStatement();
+			// String sql = "SELECT SCHEMA_NAME FROM
+			// information_schema.SCHEMATA";
+			DatabaseMetaData dmd = (DatabaseMetaData) conn.getMetaData();
+
+			ResultSet rs = dmd.getCatalogs();
+			while (rs.next()) {
+				list.add(rs.getString("TABLE_CAT"));
+			}
+			Close(stat, conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<String> showtablesindatabase(String user, String password, String port, String characterEncoding,
+			String databasename) {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		Statement stat = null;
+		List<String> tablelist = new ArrayList<String>();
+		String url = "jdbc:mysql://localhost:" + port + "/" + databasename + "?useUnicode=true&characterEncoding="
+				+ characterEncoding;
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+			DatabaseMetaData dmd = (DatabaseMetaData) conn.getMetaData();
+			ResultSet rs = dmd.getTables(null, null, "%", null);
+
+			while (rs.next()) {
+				tablelist.add(rs.getString("TABLE_NAME"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return tablelist;
+
+	}
+
+}
